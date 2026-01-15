@@ -27,10 +27,7 @@ G2L["10"].Size = UDim2.new(1, 0, 1, 0)
 G2L["10"].ZIndex = 0
 
 G2L["11"] = Instance.new("UIGradient", G2L["10"])
-G2L["11"].Color = ColorSequence.new(
-    Color3.fromRGB(248,134,81),
-    Color3.fromRGB(248,134,81)
-)
+G2L["11"].Color = ColorSequence.new(Color3.fromRGB(248,134,81), Color3.fromRGB(248,134,81))
 G2L["11"].Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 1),
     NumberSequenceKeypoint.new(0.464, 0.907),
@@ -38,7 +35,7 @@ G2L["11"].Transparency = NumberSequence.new({
 })
 G2L["11"].Rotation = 94
 
--- Container pour le contenu (évite que le UIListLayout casse tout)
+-- Container pour le contenu
 G2L["Content"] = Instance.new("Frame", G2L["2"])
 G2L["Content"].BackgroundTransparency = 1
 G2L["Content"].Size = UDim2.new(1,0,1,0)
@@ -80,9 +77,8 @@ G2L["6"].AnchorPoint = Vector2.new(0.5,0.5)
 G2L["6"].Position = UDim2.new(0.5,0,0.5,0)
 G2L["6"].ZIndex = 101
 
--- Fonction item
-local function createItem(parent, text, order)
-    -- Container pour l'item
+-- Fonction pour créer un item
+local function createItem(parent, text, order, labelName)
     local ItemContainer = Instance.new("Frame", parent)
     ItemContainer.Name = "ItemContainer"
     ItemContainer.BackgroundTransparency = 1
@@ -90,20 +86,17 @@ local function createItem(parent, text, order)
     ItemContainer.LayoutOrder = order
     ItemContainer.ZIndex = 100
 
-    -- Padding global pour reculer tout le contenu du bord gauche
+    -- Padding gauche
     local padding = Instance.new("UIPadding", ItemContainer)
-    padding.PaddingLeft = UDim.new(0,12)  -- 12 pixels depuis le bord
-    padding.PaddingTop = UDim.new(0,0)
-    padding.PaddingRight = UDim.new(0,0)
-    padding.PaddingBottom = UDim.new(0,0)
+    padding.PaddingLeft = UDim.new(0,12)
 
-    -- Layout horizontal pour icon + texte
+    -- Layout horizontal pour icône + texte
     local layout = Instance.new("UIListLayout", ItemContainer)
     layout.FillDirection = Enum.FillDirection.Horizontal
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
     layout.VerticalAlignment = Enum.VerticalAlignment.Center
     layout.SortOrder = Enum.SortOrder.LayoutOrder
-    layout.Padding = UDim.new(0,6) -- espace entre icône et texte
+    layout.Padding = UDim.new(0,6)
 
     -- Icône
     local icon = Instance.new("ImageLabel", ItemContainer)
@@ -111,13 +104,13 @@ local function createItem(parent, text, order)
     icon.Image = "rbxassetid://102491222550140"
     icon.ImageColor3 = Color3.fromRGB(230,135,20)
     icon.BackgroundTransparency = 1
-    icon.Size = UDim2.new(0,18,0,18) -- taille fixe
+    icon.Size = UDim2.new(0,18,0,18)
     icon.ScaleType = Enum.ScaleType.Fit
     icon.ZIndex = 101
 
     -- Texte
     local Item = Instance.new("TextLabel", ItemContainer)
-    Item.Name = "Item"
+    Item.Name = labelName or "Item"
     Item.BackgroundTransparency = 1
     Item.Size = UDim2.new(1,0,1,0)
     Item.Text = text
@@ -127,13 +120,11 @@ local function createItem(parent, text, order)
     Item.ZIndex = 101
 end
 
-
-
--- Items
-createItem(G2L["Content"], "[ Auto Farm Mobs ]", 1)
-createItem(G2L["Content"], "Auto Farming: le nom du monstre", 2)
-createItem(G2L["Content"], "Farming time: ", 3)
-createItem(G2L["Content"], "Fps: 212", 4)
+-- Items avec noms uniques pour script
+createItem(G2L["Content"], "[ Auto Farm Mobs ]", 1, "HeaderLabel")
+createItem(G2L["Content"], "Auto Farming: le nom du monstre", 2, "AutoFarmingLabel")
+createItem(G2L["Content"], "Farming time: ", 3, "FarmingTimeLabel")
+createItem(G2L["Content"], "Fps: 212", 4, "FPSLabel")
 
 -- Fade function
 local function Fade(object, goal, time)
@@ -158,6 +149,7 @@ _G.FadeOutDebugFrame = function()
 	Fade(G2L["2"], 1, 0.45)
 end
 
+-- Dragging
 local UIS = game:GetService("UserInputService")
 local dragging = false
 local dragInput, mousePos, framePos
