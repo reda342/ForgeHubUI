@@ -1,0 +1,199 @@
+local G2L = {}
+
+-- ScreenGui parenté à CoreGui
+G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui"))
+G2L["1"].Name = "Hoho_gen4"
+G2L["1"].IgnoreGuiInset = true
+G2L["1"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- CanvasGroup principal
+G2L["2"] = Instance.new("CanvasGroup", G2L["1"])
+G2L["2"].Name = "DEBUG_FRAME"
+G2L["2"].ZIndex = 1000
+G2L["2"].BackgroundColor3 = Color3.fromRGB(0,0,0)
+G2L["2"].BackgroundTransparency = 0.05
+G2L["2"].BorderColor3 = Color3.fromRGB(0,0,0)
+G2L["2"].AnchorPoint = Vector2.new(0.5,0.5)
+G2L["2"].Position = UDim2.new(0.5,0,0.5,0)
+G2L["2"].Size = UDim2.new(0.15,0,0.15,0)
+G2L["2"].GroupTransparency = 1 -- fade initial
+
+-- Fade orange en fond
+G2L["10"] = Instance.new("Frame", G2L["2"])
+G2L["10"].Name = "Fade"
+G2L["10"].BackgroundColor3 = Color3.fromRGB(255,255,255)
+G2L["10"].BorderSizePixel = 0
+G2L["10"].Size = UDim2.new(1, 0, 1, 0)
+G2L["10"].ZIndex = 0
+
+G2L["11"] = Instance.new("UIGradient", G2L["10"])
+G2L["11"].Color = ColorSequence.new(
+    Color3.fromRGB(248,134,81),
+    Color3.fromRGB(248,134,81)
+)
+G2L["11"].Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 1),
+    NumberSequenceKeypoint.new(0.464, 0.907),
+    NumberSequenceKeypoint.new(1, 0.732)
+})
+G2L["11"].Rotation = 94
+
+-- Container pour le contenu (évite que le UIListLayout casse tout)
+G2L["Content"] = Instance.new("Frame", G2L["2"])
+G2L["Content"].BackgroundTransparency = 1
+G2L["Content"].Size = UDim2.new(1,0,1,0)
+G2L["Content"].ZIndex = 50
+G2L["Content"].Name = "Content"
+
+-- Layout dans Content
+G2L["4"] = Instance.new("UIListLayout", G2L["Content"])
+G2L["4"].HorizontalAlignment = Enum.HorizontalAlignment.Left
+G2L["4"].SortOrder = Enum.SortOrder.LayoutOrder
+G2L["4"].Padding = UDim.new(0,6)
+
+-- UICorner
+G2L["3"] = Instance.new("UICorner", G2L["2"])
+G2L["3"].CornerRadius = UDim.new(0,10)
+
+-- TopBar
+G2L["5"] = Instance.new("Frame", G2L["Content"])
+G2L["5"].Name = "TopBar"
+G2L["5"].BackgroundColor3 = Color3.fromRGB(0,0,0)
+G2L["5"].BorderSizePixel = 0
+G2L["5"].Size = UDim2.new(0.95,0,0,30)
+G2L["5"].LayoutOrder = 0
+G2L["5"].ZIndex = 100
+
+-- Title
+G2L["6"] = Instance.new("TextLabel", G2L["5"])
+G2L["6"].Name = "Title"
+G2L["6"].BackgroundTransparency = 1
+G2L["6"].TextScaled = true
+G2L["6"].TextWrapped = true
+G2L["6"].TextXAlignment = Enum.TextXAlignment.Left
+G2L["6"].RichText = true
+G2L["6"].Text = [[<b><font color="#ffffff">FORGE</font> <font color="#ff7a00">HUB</font></b>]]
+G2L["6"].Font = Enum.Font.Merriweather
+G2L["6"].TextColor3 = Color3.fromRGB(255,255,255)
+G2L["6"].Size = UDim2.new(0.95,0,0.8,0)
+G2L["6"].AnchorPoint = Vector2.new(0.5,0.5)
+G2L["6"].Position = UDim2.new(0.5,0,0.5,0)
+G2L["6"].ZIndex = 101
+
+-- Fonction item
+local function createItem(parent, text, order)
+    -- Container pour l'item
+    local ItemContainer = Instance.new("Frame", parent)
+    ItemContainer.Name = "ItemContainer"
+    ItemContainer.BackgroundTransparency = 1
+    ItemContainer.Size = UDim2.new(1,0,0,18)
+    ItemContainer.LayoutOrder = order
+    ItemContainer.ZIndex = 100
+
+    -- Padding global pour reculer tout le contenu du bord gauche
+    local padding = Instance.new("UIPadding", ItemContainer)
+    padding.PaddingLeft = UDim.new(0,12)  -- 12 pixels depuis le bord
+    padding.PaddingTop = UDim.new(0,0)
+    padding.PaddingRight = UDim.new(0,0)
+    padding.PaddingBottom = UDim.new(0,0)
+
+    -- Layout horizontal pour icon + texte
+    local layout = Instance.new("UIListLayout", ItemContainer)
+    layout.FillDirection = Enum.FillDirection.Horizontal
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    layout.VerticalAlignment = Enum.VerticalAlignment.Center
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Padding = UDim.new(0,6) -- espace entre icône et texte
+
+    -- Icône
+    local icon = Instance.new("ImageLabel", ItemContainer)
+    icon.Name = "Icon"
+    icon.Image = "rbxassetid://102491222550140"
+    icon.ImageColor3 = Color3.fromRGB(230,135,20)
+    icon.BackgroundTransparency = 1
+    icon.Size = UDim2.new(0,18,0,18) -- taille fixe
+    icon.ScaleType = Enum.ScaleType.Fit
+    icon.ZIndex = 101
+
+    -- Texte
+    local Item = Instance.new("TextLabel", ItemContainer)
+    Item.Name = "Item"
+    Item.BackgroundTransparency = 1
+    Item.Size = UDim2.new(1,0,1,0)
+    Item.Text = text
+    Item.TextColor3 = Color3.fromRGB(255,255,255)
+    Item.TextScaled = true
+    Item.TextXAlignment = Enum.TextXAlignment.Left
+    Item.ZIndex = 101
+end
+
+
+
+-- Items
+createItem(G2L["Content"], "[ Auto Farm Mobs ]", 1)
+createItem(G2L["Content"], "Auto Farming: le nom du monstre", 2)
+createItem(G2L["Content"], "Farming time: ", 3)
+createItem(G2L["Content"], "Fps: 212", 4)
+
+-- Fade function
+local function Fade(object, goal, time)
+	local t = 0
+	local start = object.GroupTransparency
+	
+	while t < time do
+		task.wait()
+		t += task.wait()
+		local alpha = math.clamp(t/time, 0, 1)
+		object.GroupTransparency = start + (goal - start)*alpha
+	end
+	
+	object.GroupTransparency = goal
+end
+
+task.spawn(function()
+	Fade(G2L["2"], 0, 0.45) -- Fade IN
+end)
+
+_G.FadeOutDebugFrame = function()
+	Fade(G2L["2"], 1, 0.45)
+end
+
+local UIS = game:GetService("UserInputService")
+local dragging = false
+local dragInput, mousePos, framePos
+
+local function update(input)
+    local delta = input.Position - mousePos
+    G2L["2"].Position = UDim2.new(
+        0.5, framePos.X.Offset + delta.X,
+        0.5, framePos.Y.Offset + delta.Y
+    )
+end
+
+G2L["2"].InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        mousePos = input.Position
+        framePos = G2L["2"].Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+G2L["2"].InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+return G2L["1"], require
